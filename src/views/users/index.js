@@ -29,6 +29,40 @@ function Index() {
       });
   }, []);
 
+  function postUser() {
+    axios
+      .post('https://reqres.in/api/users', {
+        id: Date.now() + Math.random(),
+        firstName: 'Fred',
+        lastName: 'Flintstone',
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  const id = useFormInput('', 'number');
+  const firstName = useFormInput('', 'text');
+  const lastName = useFormInput('', 'text');
+  const email = useFormInput('', 'email');
+  
+  function useFormInput(initialValue, type) {
+    const [value, setValue] = useState(initialValue);
+
+    function handleChange(e) {
+      setValue(e.target.value);
+    }
+
+    return {
+      value,
+      type,
+      onChange: handleChange,
+    };
+  }
+
   return (
     <Container>
       <div className="mt-3 text-right">
@@ -108,7 +142,16 @@ function Index() {
           )}
         </tbody>
       </Table>
-      <UserModal modal={modal} isHide={isHide} toggle={toggle} />
+      <UserModal
+        modal={modal}
+        isHide={isHide}
+        toggle={toggle}
+        postUser={postUser}
+        id={id}
+        firstName={firstName}
+        lastName={lastName}
+        email={email}
+      />
     </Container>
   );
 }
