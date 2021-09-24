@@ -77,7 +77,7 @@ function Index() {
                 <td>
                   <Button
                     className="mr-3 mb-1"
-                    color="primary"
+                    color="success"
                     onClick={() => {
                       setModal({
                         title: 'Edit User',
@@ -90,7 +90,7 @@ function Index() {
 
                   <Button
                     className="mr-3 mb-1"
-                    color="primary"
+                    color="danger"
                     onClick={() => {
                       setModal({
                         title: 'Delete User',

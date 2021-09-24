@@ -66,12 +66,12 @@ const UserModal = (props) => {
         )}
 
         <ModalFooter>
-          <Button color="primary" onClick={toggle}>
-            Add
-          </Button>{' '}
           <Button color="secondary" onClick={toggle}>
             Cancel
           </Button>
+          <Button color="primary" onClick={toggle}>
+            Add
+          </Button>{' '}
         </ModalFooter>
       </Modal>
     </div>
