@@ -126,7 +126,7 @@ function Index() {
     }
   });
 
-  const renderTableRow = (users) => {
+  const renderUsers = (users) => {
     const firstPageIndex = (currentPage - 1) * itemsPerPage;
     const lastPageIndex = firstPageIndex + itemsPerPage;
     return (
@@ -210,8 +210,7 @@ function Index() {
             <th>Actions Button</th>
           </tr>
         </thead>
-
-        <tbody>{renderTableRow(users)}</tbody>
+        <tbody>{renderUsers(users)}</tbody>
       </Table>
       <Pagination>
         <PaginationItem disabled={currentPage == pages[0] ? true : false}>
