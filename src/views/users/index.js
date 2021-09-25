@@ -1,7 +1,15 @@
 import axios from 'axios';
 import UserModal from 'components/shared/UserModal';
 import React, {useState, useEffect} from 'react';
-import {Container, Table, CardImg, Button} from 'reactstrap';
+import {
+  Container,
+  Table,
+  CardImg,
+  Button,
+  PaginationItem,
+  PaginationLink,
+  Pagination,
+} from 'reactstrap';
 
 function Index() {
   const id = useFormInput('', 'number');
@@ -57,6 +65,122 @@ function Index() {
       onChange: handleChange,
     };
   }
+  const [currentPage, setcurrentPage] = useState(1);
+  const [itemsPerPage, setitemsPerPage] = useState(5);
+
+  const pages = [];
+  for (let i = 1; i <= Math.ceil(users?.length / itemsPerPage); i++) {
+    pages.push(i);
+  }
+  const [pageNumberLimit, setpageNumberLimit] = useState(5);
+  const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(5);
+  const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
+
+  const handleClick = (event) => {
+    console.log(event);
+    setcurrentPage(Number(event));
+  };
+
+  const handleNextbtn = () => {
+    setcurrentPage(currentPage + 1);
+
+    if (currentPage + 1 > maxPageNumberLimit) {
+      setmaxPageNumberLimit(maxPageNumberLimit + pageNumberLimit);
+      setminPageNumberLimit(minPageNumberLimit + pageNumberLimit);
+    }
+  };
+
+  const handlePrevbtn = () => {
+    setcurrentPage(currentPage - 1);
+
+    if ((currentPage - 1) % pageNumberLimit == 0) {
+      setmaxPageNumberLimit(maxPageNumberLimit - pageNumberLimit);
+      setminPageNumberLimit(minPageNumberLimit - pageNumberLimit);
+    }
+  };
+
+  let pageIncrementBtn = null;
+  if (pages.length > maxPageNumberLimit) {
+    pageIncrementBtn = <li onClick={handleNextbtn}> &hellip; </li>;
+  }
+
+  let pageDecrementBtn = null;
+  if (minPageNumberLimit >= 1) {
+    pageDecrementBtn = <li onClick={handlePrevbtn}> &hellip; </li>;
+  }
+
+  const renderPageNumbers = pages.map((number) => {
+    if (number < maxPageNumberLimit + 1 && number > minPageNumberLimit) {
+      return (
+        <PaginationItem
+          key={number}
+          id={number}
+          onClick={() => handleClick(number)}
+          className={currentPage == number ? 'active' : null}
+        >
+          <PaginationLink>{number}</PaginationLink>
+        </PaginationItem>
+      );
+    } else {
+      return null;
+    }
+  });
+
+  const renderTableRow = (users) => {
+    const firstPageIndex = (currentPage - 1) * itemsPerPage;
+    const lastPageIndex = firstPageIndex + itemsPerPage;
+    return (
+      <>
+        {users ? (
+          users?.slice(firstPageIndex, lastPageIndex).map((user, index) => (
+            <tr key={index}>
+              <th scope="row">{user.id}</th>
+              <td>
+                <CardImg
+                  top
+                  width="100%"
+                  src={user.avatar}
+                  alt="Card image cap"
+                />
+              </td>
+              <td>{user.email}</td>
+              <td>{user.first_name}</td>
+              <td>{user.last_name}</td>
+              <td>
+                <Button
+                  className="mr-3 mb-1"
+                  color="success"
+                  onClick={() => {
+                    setModal({
+                      title: 'Edit User',
+                    });
+                    toggle();
+                  }}
+                >
+                  Edit User
+                </Button>
+
+                <Button
+                  className="mr-3 mb-1"
+                  color="danger"
+                  onClick={() => {
+                    setModal({
+                      title: 'Delete User',
+                    });
+                    toggle();
+                  }}
+                >
+                  Delete User
+                </Button>
+              </td>
+            </tr>
+          ))
+        ) : (
+          <></>
+        )}
+      </>
+    );
+  };
 
   return (
     <Container>
@@ -87,56 +211,22 @@ function Index() {
           </tr>
         </thead>
 
-        <tbody>
-          {users ? (
-            users?.map((user, index) => (
-              <tr key={index}>
-                <th scope="row">{user.id}</th>
-                <td>
-                  <CardImg
-                    top
-                    width="100%"
-                    src={user.avatar}
-                    alt="Card image cap"
-                  />
-                </td>
-                <td>{user.email}</td>
-                <td>{user.first_name}</td>
-                <td>{user.last_name}</td>
-                <td>
-                  <Button
-                    className="mr-3 mb-1"
-                    color="success"
-                    onClick={() => {
-                      setModal({
-                        title: 'Edit User',
-                      });
-                      toggle();
-                    }}
-                  >
-                    Edit User
-                  </Button>
-
-                  <Button
-                    className="mr-3 mb-1"
-                    color="danger"
-                    onClick={() => {
-                      setModal({
-                        title: 'Delete User',
-                      });
-                      toggle();
-                    }}
-                  >
-                    Delete User
-                  </Button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <></>
-          )}
-        </tbody>
+        <tbody>{renderTableRow(users)}</tbody>
       </Table>
+      <Pagination>
+        <PaginationItem disabled={currentPage == pages[0] ? true : false}>
+          <PaginationLink first onClick={handlePrevbtn} />
+        </PaginationItem>
+        {pageDecrementBtn}
+        {renderPageNumbers}
+        {pageIncrementBtn}
+
+        <PaginationItem
+          disabled={currentPage == pages[pages.length - 1] ? true : false}
+        >
+          <PaginationLink last onClick={handleNextbtn} />
+        </PaginationItem>
+      </Pagination>
       <UserModal
         modal={modal}
         isHide={isHide}
