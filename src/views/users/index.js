@@ -4,6 +4,11 @@ import React, {useState, useEffect} from 'react';
 import {Container, Table, CardImg, Button} from 'reactstrap';
 
 function Index() {
+  const id = useFormInput('', 'number');
+  const firstName = useFormInput('', 'text');
+  const lastName = useFormInput('', 'text');
+  const email = useFormInput('', 'email');
+
   const [users, setUsers] = useState();
   const [isHide, setIsHide] = useState(false);
   const [modal, setModal] = useState({
@@ -12,31 +17,26 @@ function Index() {
   const toggle = () => setIsHide(!isHide);
 
   useEffect(() => {
-    axios
-      .get('https://reqres.in/api/users?page=1')
-      .then(function (response) {
-        const {data: body} = response;
-        // handle success
-        setUsers(body.data);
-        console.log(body.data);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .then(function () {
-        // always executed
-      });
+    getUsers();
   }, []);
+
+  async function getUsers() {
+    const result = await axios('https://reqres.in/api/users');
+    setUsers(result.data.data);
+    console.log(result.data.data);
+  }
 
   function postUser() {
     axios
       .post('https://reqres.in/api/users', {
-        id: Date.now() + Math.random(),
-        firstName: 'Fred',
-        lastName: 'Flintstone',
+        id: id.value,
+        avatar: 'https://reqres.in/img/faces/1-image.jpg',
+        first_name: firstName.value,
+        last_name: lastName.value,
+        email: email.value,
       })
       .then(function (response) {
+        setUsers([...users, response.data]);
         console.log(response);
       })
       .catch(function (error) {
@@ -44,11 +44,6 @@ function Index() {
       });
   }
 
-  const id = useFormInput('', 'number');
-  const firstName = useFormInput('', 'text');
-  const lastName = useFormInput('', 'text');
-  const email = useFormInput('', 'email');
-  
   function useFormInput(initialValue, type) {
     const [value, setValue] = useState(initialValue);
 
