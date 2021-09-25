@@ -20,7 +20,7 @@ function Index() {
   const [users, setUsers] = useState();
   const [isHide, setIsHide] = useState(false);
   const [modal, setModal] = useState({
-    title: 'Add',
+    title: 'Add User',
   });
   const toggle = () => setIsHide(!isHide);
 
@@ -213,15 +213,14 @@ function Index() {
         <tbody>{renderUsers(users)}</tbody>
       </Table>
       <Pagination>
-        <PaginationItem disabled={currentPage == pages[0] ? true : false}>
+        <PaginationItem disabled={currentPage === pages[0] ? true : false}>
           <PaginationLink first onClick={handlePrevbtn} />
         </PaginationItem>
         {pageDecrementBtn}
         {renderPageNumbers}
         {pageIncrementBtn}
-
         <PaginationItem
-          disabled={currentPage == pages[pages.length - 1] ? true : false}
+          disabled={currentPage === pages[pages.length - 1] ? true : false}
         >
           <PaginationLink last onClick={handleNextbtn} />
         </PaginationItem>

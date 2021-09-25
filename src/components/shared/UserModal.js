@@ -16,13 +16,12 @@ const UserModal = (props) => {
   const {modal, isHide, toggle, postUser, id, firstName, lastName, email} =
     props;
 
+  console.log(modal);
   return (
     <div>
       <Modal isOpen={isHide} toggle={toggle} className={modal?.className}>
         <ModalHeader toggle={toggle}>{modal.title}</ModalHeader>
-        {modal === 'Add' ? (
-          <></>
-        ) : (
+        {modal.title === 'Add User' ? (
           <ModalBody>
             <FormGroup>
               <Label for="id">ID</Label>
@@ -45,21 +44,53 @@ const UserModal = (props) => {
               <Input {...lastName} />
             </FormGroup>
           </ModalBody>
+        ) : (
+          <></>
         )}
 
         <ModalFooter>
           <Button color="secondary" onClick={toggle}>
             Cancel
           </Button>
-          <Button
-            color="primary"
-            onClick={() => {
-              toggle();
-              postUser();
-            }}
-          >
-            Add
-          </Button>{' '}
+          {modal.title === 'Add User' ? (
+            <Button
+              color="primary"
+              onClick={() => {
+                toggle();
+                postUser();
+              }}
+            >
+              Add
+            </Button>
+          ) : (
+            <></>
+          )}
+          {modal.title === 'Delete User' ? (
+            <Button
+              color="danger"
+              onClick={() => {
+                toggle();
+                postUser();
+              }}
+            >
+              Delete
+            </Button>
+          ) : (
+            <></>
+          )}
+          {modal.title === 'Edit User' ? (
+            <Button
+              color="success"
+              onClick={() => {
+                toggle();
+                postUser();
+              }}
+            >
+              Update
+            </Button>
+          ) : (
+            <></>
+          )}
         </ModalFooter>
       </Modal>
     </div>
