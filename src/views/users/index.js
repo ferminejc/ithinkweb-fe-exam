@@ -12,16 +12,17 @@ import {
 } from 'reactstrap';
 
 function Index() {
-  const id = useFormInput('', 'number');
-  const firstName = useFormInput('', 'text');
-  const lastName = useFormInput('', 'text');
-  const email = useFormInput('', 'email');
+  let id = useFormInput('', 'number');
+  let firstName = useFormInput('', 'text');
+  let lastName = useFormInput('', 'text');
+  let email = useFormInput('', 'email');
 
   const [users, setUsers] = useState();
   const [isHide, setIsHide] = useState(false);
   const [modal, setModal] = useState({
     title: 'Add User',
   });
+
   const toggle = () => setIsHide(!isHide);
 
   useEffect(() => {
@@ -55,14 +56,14 @@ function Index() {
   function useFormInput(initialValue, type) {
     const [value, setValue] = useState(initialValue);
 
-    function handleChange(e) {
+    function onChange(e) {
       setValue(e.target.value);
     }
 
     return {
       value,
       type,
-      onChange: handleChange,
+      onChange,
     };
   }
   const [currentPage, setcurrentPage] = useState(1);
@@ -126,6 +127,56 @@ function Index() {
     }
   });
 
+  const renderButton = () => {
+    let button = <></>;
+    console.log(modal);
+    if (modal.title === 'Add User') {
+      button = (
+        <Button
+          color="primary"
+          onClick={() => {
+            toggle();
+            postUser();
+          }}
+        >
+          Create
+        </Button>
+      );
+    } else if (modal.title === 'Edit User') {
+      button = (
+        <Button
+          color="warning"
+          onClick={() => {
+            toggle();
+          }}
+        >
+          Update
+        </Button>
+      );
+    } else if (modal.title === 'Delete User') {
+      button = (
+        <Button
+          color="danger"
+          onClick={() => {
+            toggle();
+          }}
+        >
+          Confirm
+        </Button>
+      );
+    }
+    return button;
+  };
+
+  const getSelectedUser = (user) => {
+    return {
+      firstName: user.first_name,
+      lastName: user.last_name,
+      email: user.email,
+      id: user.id,
+    };
+  };
+
   const renderUsers = (users) => {
     const firstPageIndex = (currentPage - 1) * itemsPerPage;
     const lastPageIndex = firstPageIndex + itemsPerPage;
@@ -149,15 +200,16 @@ function Index() {
               <td>
                 <Button
                   className="mr-3 mb-1"
-                  color="success"
+                  color="warning"
                   onClick={() => {
                     setModal({
                       title: 'Edit User',
+                      ...getSelectedUser(user),
                     });
                     toggle();
                   }}
                 >
-                  Edit User
+                  Edit
                 </Button>
 
                 <Button
@@ -166,11 +218,12 @@ function Index() {
                   onClick={() => {
                     setModal({
                       title: 'Delete User',
+                      ...getSelectedUser(user),
                     });
                     toggle();
                   }}
                 >
-                  Delete User
+                  Delete
                 </Button>
               </td>
             </tr>
@@ -184,6 +237,16 @@ function Index() {
 
   return (
     <Container>
+      <UserModal
+        modal={modal}
+        renderButton={renderButton}
+        isHide={isHide}
+        toggle={toggle}
+        id={id}
+        firstName={firstName}
+        lastName={lastName}
+        email={email}
+      />
       <div className="mt-3 text-right">
         <Button
           className="mr-3 mb-1"
@@ -225,16 +288,6 @@ function Index() {
           <PaginationLink last onClick={handleNextbtn} />
         </PaginationItem>
       </Pagination>
-      <UserModal
-        modal={modal}
-        isHide={isHide}
-        toggle={toggle}
-        postUser={postUser}
-        id={id}
-        firstName={firstName}
-        lastName={lastName}
-        email={email}
-      />
     </Container>
   );
 }
