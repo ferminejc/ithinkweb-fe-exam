@@ -42,6 +42,21 @@ const UserModal = (props) => {
             <Input {...email.attrib} />
           </FormGroup>
         </ModalBody>
+        {modal.title === 'Delete User' ? (
+          <h1
+            style={{
+              fontSize: '1.4rem',
+              textAlign: 'center',
+              color: 'red',
+              padding: '0.8rem',
+            }}
+          >
+            This action cannot be undone. Are you sure you want to delete this
+            user?.
+          </h1>
+        ) : (
+          <></>
+        )}
         <ModalFooter>
           <Button color="secondary" onClick={toggle}>
             Cancel
