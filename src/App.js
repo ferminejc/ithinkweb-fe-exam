@@ -4,10 +4,11 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import {Page} from 'components/Pages';
 import Home from 'views/home';
 import Users from 'views/users';
+import styles from './App.scss';
 
 function App() {
   return (
-    <div className="app">
+    <div className={styles['app']}>
       <Router>
         <Page>
           <Switch>

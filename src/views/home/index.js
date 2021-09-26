@@ -1,9 +1,10 @@
 import React from 'react';
 import {Container, Jumbotron} from 'reactstrap';
+import styles from './Home.scss';
 
 function Index() {
   return (
-    <Container>
+    <Container className={styles['home']}>
       <Jumbotron className="mt-5">
         <h1 className="display-4">John Christian E. Fermin</h1>
         <address>

@@ -10,6 +10,7 @@ import {
   PaginationLink,
   Pagination,
 } from 'reactstrap';
+import styles from './Users.scss';
 
 function Index() {
   let id = useFormInput('', 'number');
@@ -67,14 +68,14 @@ function Index() {
     };
   }
   const [currentPage, setcurrentPage] = useState(1);
-  const [itemsPerPage, setitemsPerPage] = useState(5);
+  const [itemsPerPage, setitemsPerPage] = useState(10);
 
   const pages = [];
   for (let i = 1; i <= Math.ceil(users?.length / itemsPerPage); i++) {
     pages.push(i);
   }
-  const [pageNumberLimit, setpageNumberLimit] = useState(5);
-  const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(5);
+  const [pageNumberLimit, setpageNumberLimit] = useState(10);
+  const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(10);
   const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
 
   const handleClick = (event) => {
@@ -190,6 +191,7 @@ function Index() {
                 <CardImg
                   top
                   width="100%"
+                  className={styles['card-img']}
                   src={user.avatar}
                   alt="Card image cap"
                 />
@@ -236,7 +238,7 @@ function Index() {
   };
 
   return (
-    <Container>
+    <Container className={styles['users']}>
       <UserModal
         modal={modal}
         renderButton={renderButton}
