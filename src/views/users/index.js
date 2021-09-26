@@ -13,7 +13,7 @@ import {
 import styles from './Users.scss';
 
 function Index() {
-  let id = useFormInput('', 'number');
+  let id = useFormInput('', 'number', true);
   let firstName = useFormInput('', 'text');
   let lastName = useFormInput('', 'text');
   let email = useFormInput('', 'email');
@@ -30,41 +30,23 @@ function Index() {
     getUsers();
   }, []);
 
-  async function getUsers() {
-    const result = await axios('https://reqres.in/api/users');
-    setUsers(result.data.data);
-    console.log(result.data.data);
-  }
-
-  function postUser() {
-    axios
-      .post('https://reqres.in/api/users', {
-        id: id.value,
-        avatar: 'https://reqres.in/img/faces/1-image.jpg',
-        first_name: firstName.value,
-        last_name: lastName.value,
-        email: email.value,
-      })
-      .then(function (response) {
-        setUsers([...users, response.data]);
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }
-
-  function useFormInput(initialValue, type) {
+  function useFormInput(initialValue, type, disabled) {
     const [value, setValue] = useState(initialValue);
 
-    function onChange(e) {
+    function handleChange(e) {
       setValue(e.target.value);
     }
 
     return {
-      value,
-      type,
-      onChange,
+      attrib: {
+        value,
+        type,
+        disabled: disabled ? true : false,
+        onChange: handleChange,
+      },
+      func: {
+        setValue,
+      },
     };
   }
   const [currentPage, setcurrentPage] = useState(1);
@@ -79,7 +61,6 @@ function Index() {
   const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
 
   const handleClick = (event) => {
-    console.log(event);
     setcurrentPage(Number(event));
   };
 
@@ -130,7 +111,6 @@ function Index() {
 
   const renderButton = () => {
     let button = <></>;
-    console.log(modal);
     if (modal.title === 'Add User') {
       button = (
         <Button
@@ -148,6 +128,7 @@ function Index() {
         <Button
           color="warning"
           onClick={() => {
+            updateUser();
             toggle();
           }}
         >
@@ -159,6 +140,7 @@ function Index() {
         <Button
           color="danger"
           onClick={() => {
+            deleteUser(id.attrib.value);
             toggle();
           }}
         >
@@ -167,15 +149,6 @@ function Index() {
       );
     }
     return button;
-  };
-
-  const getSelectedUser = (user) => {
-    return {
-      firstName: user.first_name,
-      lastName: user.last_name,
-      email: user.email,
-      id: user.id,
-    };
   };
 
   const renderUsers = (users) => {
@@ -204,9 +177,9 @@ function Index() {
                   className="mr-3 mb-1"
                   color="warning"
                   onClick={() => {
+                    populateUser(user);
                     setModal({
                       title: 'Edit User',
-                      ...getSelectedUser(user),
                     });
                     toggle();
                   }}
@@ -218,9 +191,9 @@ function Index() {
                   className="mr-3 mb-1"
                   color="danger"
                   onClick={() => {
+                    populateUser(user);
                     setModal({
                       title: 'Delete User',
-                      ...getSelectedUser(user),
                     });
                     toggle();
                   }}
@@ -235,6 +208,89 @@ function Index() {
         )}
       </>
     );
+  };
+
+  async function getUsers() {
+    const result = await axios('https://reqres.in/api/users');
+    setUsers(result.data.data);
+  }
+
+  function postUser() {
+    axios
+      .post('https://reqres.in/api/users', {
+        id: id.attrib.value,
+        avatar: 'https://reqres.in/img/faces/1-image.jpg',
+        first_name: firstName.attrib.value,
+        last_name: lastName.attrib.value,
+        email: email.attrib.value,
+      })
+      .then(function (response) {
+        setUsers([...users, response.data]);
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  function updateUser() {
+    axios
+      .put('https://reqres.in/api/users/1', {
+        id: id.attrib.value,
+        avatar: users[id.attrib.value - 1].avatar,
+        first_name: firstName.attrib.value,
+        last_name: lastName.attrib.value,
+        email: email.attrib.value,
+      })
+      .then(function (response) {
+        const newUsers = users.map((e) => {
+          if (e.id === id.attrib.value) {
+            console.log(e.id);
+            return {
+              ...e,
+              avatar: response.data.avatar,
+              email: response.data.email,
+              first_name: response.data.first_name,
+              id: response.data.id,
+              last_name: response.data.last_name,
+              updatedAt: response.data.updated_at,
+            };
+          } else {
+            return e;
+          }
+        });
+        setUsers(newUsers);
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  async function deleteUser(id) {
+    const result = await axios.delete('https://reqres.in/api/users/' + id);
+    const newUsers = users.filter((e) => e.id !== id);
+    setUsers(newUsers);
+    console.log(result);
+  }
+
+  function populateUser(user) {
+    id.func.setValue(user.id);
+    firstName.func.setValue(user.first_name);
+    lastName.func.setValue(user.last_name);
+    email.func.setValue(user.email);
+  }
+
+  function reset(user) {
+    id.func.setValue('');
+    firstName.func.setValue('');
+    lastName.func.setValue('');
+    email.func.setValue('');
+  }
+
+  const generateUserID = () => {
+    const id = users[users.length - 1].id;
+    return id + 1;
   };
 
   return (
@@ -254,6 +310,8 @@ function Index() {
           className="mr-3 mb-1"
           color="primary"
           onClick={() => {
+            reset();
+            id.func.setValue(generateUserID());
             setModal({
               title: 'Add User',
             });
@@ -264,7 +322,7 @@ function Index() {
         </Button>
       </div>
 
-      <Table className="mt-3">
+      <Table className="mt-3 fadeInDown">
         <thead>
           <tr>
             <th>ID</th>

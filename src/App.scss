@@ -15,3 +15,69 @@ body {
   font-family: 'Roboto', sans-serif;
   box-sizing: border-box;
 }
+
+/* Chrome, Safari, Opera */
+
+.fadeInUp {
+  -webkit-animation: fadeInUp 200ms ease-in-out; /* Chrome, Safari, Opera */
+  animation: fadeInUp 200ms ease-in-out;
+}
+
+.fadeInDown {
+  -webkit-animation: fadeInDown 500ms ease-in-out; /* Chrome, Safari, Opera */
+  animation: fadeInDown 500ms ease-in-out;
+}
+
+.fadeInRight {
+  -webkit-animation: fadeInRight 500ms ease-in-out; /* Chrome, Safari, Opera */
+  animation: fadeInRight 500ms ease-in-out;
+}
+
+.fadeInLeft {
+  -webkit-animation: fadeInLeft 500ms ease-in-out; /* Chrome, Safari, Opera */
+  animation: fadeInLeft 500ms ease-in-out;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(-80px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(80px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

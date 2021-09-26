@@ -5,10 +5,18 @@ import styles from './Home.scss';
 function Index() {
   return (
     <Container className={styles['home']}>
-      <Jumbotron className="mt-5">
-        <h1 className="display-4">John Christian E. Fermin</h1>
-        <address>
+      <Jumbotron className="mt-5 fadeInUp">
+        <h1 className="display-4 fadeInDown">John Christian E. Fermin</h1>
+        <address className="fadeInRight">
           <a href="mailto:ferminejc@gmail.com">ferminejc@gmail.com</a>
+        </address>
+        <address className="fadeInLeft">
+          <a
+            href="https://www.linkedin.com/in/jc-fermin-1846801b0/"
+            target="_blank"
+          >
+            Visit my LinkedIn
+          </a>
         </address>
       </Jumbotron>
     </Container>

@@ -9,21 +9,22 @@ import {
   NavItem,
   NavLink,
 } from 'reactstrap';
+import styles from './PageNav.module.scss';
 
 function PageNav() {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
   return (
-    <Navbar color="light" light expand="md">
-      <NavbarBrand tag={Link} to="/">
+    <Navbar expand="md" className={styles['navbar']}>
+      <NavbarBrand tag={Link} to="/" className="nav-link">
         Home
       </NavbarBrand>
       <NavbarToggler onClick={toggle} />
       <Collapse isOpen={isOpen} navbar>
         <Nav className="mr-auto" navbar>
           <NavItem>
-            <NavLink tag={Link} to="/users">
+            <NavLink tag={Link} to="/users" className="nav-link">
               Users
             </NavLink>
           </NavItem>
