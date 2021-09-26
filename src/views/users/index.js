@@ -50,13 +50,13 @@ function Index() {
     };
   }
   const [currentPage, setcurrentPage] = useState(1);
-  const [itemsPerPage, setitemsPerPage] = useState(10);
+  const [itemsPerPage] = useState(10);
 
   const pages = [];
   for (let i = 1; i <= Math.ceil(users?.length / itemsPerPage); i++) {
     pages.push(i);
   }
-  const [pageNumberLimit, setpageNumberLimit] = useState(10);
+  const [pageNumberLimit] = useState(10);
   const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(10);
   const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
 
@@ -76,7 +76,7 @@ function Index() {
   const handlePrevbtn = () => {
     setcurrentPage(currentPage - 1);
 
-    if ((currentPage - 1) % pageNumberLimit == 0) {
+    if ((currentPage - 1) % pageNumberLimit === 0) {
       setmaxPageNumberLimit(maxPageNumberLimit - pageNumberLimit);
       setminPageNumberLimit(minPageNumberLimit - pageNumberLimit);
     }
@@ -99,7 +99,7 @@ function Index() {
           key={number}
           id={number}
           onClick={() => handleClick(number)}
-          className={currentPage == number ? 'active' : null}
+          className={currentPage === number ? 'active' : null}
         >
           <PaginationLink>{number}</PaginationLink>
         </PaginationItem>

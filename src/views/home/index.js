@@ -13,6 +13,7 @@ function Index() {
         <address className="fadeInLeft">
           <a
             href="https://www.linkedin.com/in/jc-fermin-1846801b0/"
+            // eslint-disable-next-line react/jsx-no-target-blank
             target="_blank"
           >
             Visit my LinkedIn
