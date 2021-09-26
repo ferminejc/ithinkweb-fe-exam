@@ -14,6 +14,7 @@ import styles from './Users.scss';
 
 function Index() {
   let id = useFormInput('', 'number', true);
+  let avatar = useFormInput('', 'file');
   let firstName = useFormInput('', 'text');
   let lastName = useFormInput('', 'text');
   let email = useFormInput('', 'email');
@@ -30,8 +31,9 @@ function Index() {
     getUsers();
   }, []);
 
-  function useFormInput(initialValue, type, disabled) {
+  function useFormInput(initialValue, type, initialDisableValue) {
     const [value, setValue] = useState(initialValue);
+    const [disabled, setDisabled] = useState(initialDisableValue);
 
     function handleChange(e) {
       setValue(e.target.value);
@@ -41,11 +43,12 @@ function Index() {
       attrib: {
         value,
         type,
-        disabled: disabled ? true : false,
+        disabled,
         onChange: handleChange,
       },
       func: {
         setValue,
+        setDisabled,
       },
     };
   }
@@ -177,7 +180,7 @@ function Index() {
                   className="mr-3 mb-1"
                   color="warning"
                   onClick={() => {
-                    populateUser(user);
+                    populateUser(user, false);
                     setModal({
                       title: 'Edit User',
                     });
@@ -191,7 +194,8 @@ function Index() {
                   className="mr-3 mb-1"
                   color="danger"
                   onClick={() => {
-                    populateUser(user);
+                    populateUser(user, true);
+
                     setModal({
                       title: 'Delete User',
                     });
@@ -274,11 +278,17 @@ function Index() {
     console.log(result);
   }
 
-  function populateUser(user) {
+  function populateUser(user, isDisabled) {
     id.func.setValue(user.id);
     firstName.func.setValue(user.first_name);
     lastName.func.setValue(user.last_name);
     email.func.setValue(user.email);
+    if (isDisabled) {
+      avatar.func.setDisabled(true);
+      firstName.func.setDisabled(true);
+      lastName.func.setDisabled(true);
+      email.func.setDisabled(true);
+    }
   }
 
   function reset(user) {
@@ -286,6 +296,11 @@ function Index() {
     firstName.func.setValue('');
     lastName.func.setValue('');
     email.func.setValue('');
+
+    avatar.func.setDisabled(false);
+    firstName.func.setDisabled(false);
+    lastName.func.setDisabled(false);
+    email.func.setDisabled(false);
   }
 
   const generateUserID = () => {
@@ -300,6 +315,7 @@ function Index() {
         renderButton={renderButton}
         isHide={isHide}
         toggle={toggle}
+        avatar={avatar}
         id={id}
         firstName={firstName}
         lastName={lastName}

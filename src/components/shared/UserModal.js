@@ -13,8 +13,17 @@ import {
 } from 'reactstrap';
 
 const UserModal = (props) => {
-  const {modal, isHide, toggle, id, firstName, lastName, email, renderButton} =
-    props;
+  const {
+    modal,
+    isHide,
+    toggle,
+    id,
+    firstName,
+    lastName,
+    email,
+    avatar,
+    renderButton,
+  } = props;
 
   return (
     <div>
@@ -27,7 +36,7 @@ const UserModal = (props) => {
           </FormGroup>
           <FormGroup>
             <Label for="avatar">Avatar</Label>
-            <Input type="file" name="avatar" id="avatar" />
+            <Input {...avatar.attrib} />
           </FormGroup>
           <FormGroup>
             <Label for="firstName">First Name</Label>
